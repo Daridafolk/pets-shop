@@ -84,3 +84,73 @@ const items = [
     img: "./img/12.jpeg",
   },
 ];
+
+const shopItemsContainer = document.getElementById('shop-items');
+const itemTemplate = document.getElementById('item-template');
+const searchInput = document.getElementById('search-input');
+const searchBtn = document.getElementById('search-btn');
+const nothingFoundMessage = document.getElementById('nothing-found');
+
+function displayItems(items) {
+  shopItemsContainer.innerHTML = '';
+
+  items.forEach(item => {
+  const itemElement = document.createElement('div');
+  itemElement.classList.add('shop-item'); 
+
+  const imgElement = document.createElement('img');
+  imgElement.src = item.img;
+  itemElement.append(imgElement);
+
+  const divContent = document.createElement('div');
+  divContent.classList.add('content');
+
+  const titleElement = document.createElement('h1');
+  titleElement.textContent = item.title;  
+  divContent.append(titleElement);
+
+  
+  const descriptionElement = document.createElement('p');
+  descriptionElement.textContent = item.description;
+  divContent.append(descriptionElement);
+
+
+
+  const priceElement = document.createElement('span');
+  priceElement.classList.add('price'); 
+  priceElement.textContent = `${item.price} руб.`;
+  divContent.append(priceElement); 
+
+  
+  const tagsContainer = document.createElement('div');
+  tagsContainer.classList.add('tags'); 
+
+  item.tags.forEach(tag => {
+    const tagElement = document.createElement('span');
+    tagElement.classList.add('tag');
+    tagElement.textContent = tag;
+    tagsContainer.append(tagElement);
+  })
+  
+  divContent.append(tagsContainer);
+
+
+  itemElement.append(divContent); 
+  shopItemsContainer.append(itemElement);
+  });
+}
+
+searchBtn.addEventListener('click', () => {
+  const searchValue = searchInput.value.trim().toLowerCase();
+  const filteredItems = items.filter(item => item.title.toLowerCase().includes(searchValue));
+
+  if (filteredItems.length === 0) {
+    nothingFoundMessage.textContent = 'Ничего не найдено'; 
+  } else {
+    nothingFoundMessage.textContent = '';
+  }
+
+  displayItems(filteredItems);
+})
+
+displayItems(items);
