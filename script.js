@@ -94,61 +94,41 @@ const nothingFoundMessage = document.getElementById('nothing-found');
 function displayItems(items) {
   shopItemsContainer.innerHTML = '';
 
+    if (!items.length) {
+    nothingFoundMessage.textContent = 'Ничего не найдено'; 
+  } else {
+    nothingFoundMessage.textContent = '';
+  }
+
   items.forEach(item => {
-  const itemElement = document.createElement('div');
-  itemElement.classList.add('shop-item'); 
-
-  const imgElement = document.createElement('img');
-  imgElement.src = item.img;
-  itemElement.append(imgElement);
-
-  const divContent = document.createElement('div');
-  divContent.classList.add('content');
-
-  const titleElement = document.createElement('h1');
-  titleElement.textContent = item.title;  
-  divContent.append(titleElement);
-
-  
-  const descriptionElement = document.createElement('p');
-  descriptionElement.textContent = item.description;
-  divContent.append(descriptionElement);
-
-
-
-  const priceElement = document.createElement('span');
-  priceElement.classList.add('price'); 
-  priceElement.textContent = `${item.price} руб.`;
-  divContent.append(priceElement); 
-
-  
-  const tagsContainer = document.createElement('div');
-  tagsContainer.classList.add('tags'); 
-
-  item.tags.forEach(tag => {
-    const tagElement = document.createElement('span');
-    tagElement.classList.add('tag');
-    tagElement.textContent = tag;
-    tagsContainer.append(tagElement);
-  })
-  
-  divContent.append(tagsContainer);
-
-
-  itemElement.append(divContent); 
-  shopItemsContainer.append(itemElement);
+    shopItemsContainer.append(createCard(item));
   });
+}
+
+function createCard(item) {
+  
+  const newCard = itemTemplate.content.cloneNode(true); 
+
+  newCard.querySelector('h1').textContent = item.title;
+  newCard.querySelector('p').textContent = item.description;
+  newCard.querySelector('img').src = item.img;
+  newCard.querySelector('.price').textContent = `${item.price} руб.`;
+
+  const tagsContainer = newCard.querySelector('.tags');
+
+  item.tags.forEach((tag) => {
+    const tagsElement = document.createElement("span");
+    tagsElement.textContent = tag;
+    tagsElement.classList.add("tag");
+    tagsContainer.append(tagsElement);
+  });
+
+  return newCard;
 }
 
 searchBtn.addEventListener('click', () => {
   const searchValue = searchInput.value.trim().toLowerCase();
   const filteredItems = items.filter(item => item.title.toLowerCase().includes(searchValue));
-
-  if (filteredItems.length === 0) {
-    nothingFoundMessage.textContent = 'Ничего не найдено'; 
-  } else {
-    nothingFoundMessage.textContent = '';
-  }
 
   displayItems(filteredItems);
 })
