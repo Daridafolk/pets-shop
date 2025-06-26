@@ -84,3 +84,53 @@ const items = [
     img: "./img/12.jpeg",
   },
 ];
+
+const shopItemsContainer = document.getElementById('shop-items');
+const itemTemplate = document.getElementById('item-template');
+const searchInput = document.getElementById('search-input');
+const searchBtn = document.getElementById('search-btn');
+const nothingFoundMessage = document.getElementById('nothing-found');
+
+function displayItems(items) {
+  items.forEach(item => {
+    shopItemsContainer.append(createCard(item));
+  });
+}
+
+function createCard(item) {
+  
+  const newCard = itemTemplate.content.cloneNode(true); 
+
+  newCard.querySelector('h1').textContent = item.title;
+  newCard.querySelector('p').textContent = item.description;
+  newCard.querySelector('img').src = item.img;
+  newCard.querySelector('.price').textContent = `${item.price} руб.`;
+
+  const tagsContainer = newCard.querySelector('.tags');
+
+  item.tags.forEach((tag) => {
+    const tagsElement = document.createElement("span");
+    tagsElement.textContent = tag;
+    tagsElement.classList.add("tag");
+    tagsContainer.append(tagsElement);
+  });
+
+  return newCard;
+}
+
+searchBtn.addEventListener('click', () => {
+  const searchValue = searchInput.value.trim().toLowerCase();
+  const filteredItems = items.filter(item => item.title.toLowerCase().includes(searchValue));
+
+  shopItemsContainer.innerHTML = '';
+
+  if (!filteredItems.length) {
+    nothingFoundMessage.textContent = 'Ничего не найдено'; 
+  } else {
+    nothingFoundMessage.textContent = '';
+  }
+
+  displayItems(filteredItems);
+})
+
+displayItems(items);
